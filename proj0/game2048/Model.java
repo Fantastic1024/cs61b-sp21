@@ -116,8 +116,8 @@ public class Model extends Observable {
         if (up == null) {
             return 1 + moveStep(i, j + 1, now, merged);
         }
-        if (up.value() == now.value() && !merged) {
-            return 1;
+        if (up.value() == now.value() && (!merged || (board.tile(i, 3) != null && board.tile(i, 3).value() > now.value()))) {
+            return 1;  // 首先判断是否merge过， 即使merge过如果第3个数大于现在的数也可以进行merge
         }
         else {
             return 0;
@@ -131,6 +131,8 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        this.board.setViewingPerspective(side);
+
         for (int i = 0; i < 4; i++) {
             boolean merged = false;
             for (int j = 2; j >= 0; j--) {
@@ -146,7 +148,7 @@ public class Model extends Observable {
                 changed = true;
             }
         }
-
+        this.board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
