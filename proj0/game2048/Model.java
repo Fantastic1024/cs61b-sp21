@@ -117,7 +117,7 @@ public class Model extends Observable {
             return 1 + moveStep(i, j + 1, now, merged);
         }
         if (up.value() == now.value() && (!merged || (board.tile(i, 3) != null && board.tile(i, 3).value() > now.value()))) {
-            return 1;  // 首先判断是否merge过， 即使merge过如果第3个数大于现在的数也可以进行merge
+            return 1;  // 首先判断是否merge过， 即使merge过如果第3个数大于现在的数也可以进行merge(merge过并且等于第3个数就不进行merge操作)
         }
         else {
             return 0;
