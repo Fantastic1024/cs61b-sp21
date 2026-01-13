@@ -18,7 +18,6 @@ public class ArrayDeque<T> {
     private void resizeEnlarge() {
         int firstIndex = (nextFirst + 1) % maxSize;
         int firstSize = maxSize - firstIndex;
-//        int lastIndex = (((nextLast - 1) % maxSize) + maxSize) % maxSize;
         int lastSize = maxSize - firstSize;
         maxSize *= 2;
         T[] newArray = (T[]) new Object[maxSize];
@@ -44,7 +43,6 @@ public class ArrayDeque<T> {
         if (lastIndex > firstIndex) {
             firstSize = (lastIndex - firstIndex + 1);
         } else {
-//            firstSize = maxSize - firstIndex + 1;
             lastSize = lastIndex + 1;
             System.arraycopy(items, 0, newArray, firstSize, lastSize);
         }
@@ -55,7 +53,7 @@ public class ArrayDeque<T> {
     }
 
     public void addFirst(T item) {
-        if (maxSize == size){
+        if (maxSize == size) {
             resizeEnlarge();
         }
         items[nextFirst] = item;
@@ -64,7 +62,7 @@ public class ArrayDeque<T> {
     }
 
     public void addLast(T item) {
-        if (maxSize == size){
+        if (maxSize == size) {
             resizeEnlarge();
         }
         items[nextLast] = item;

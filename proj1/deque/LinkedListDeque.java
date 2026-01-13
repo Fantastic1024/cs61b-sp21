@@ -1,10 +1,11 @@
 package deque;
 
 public class LinkedListDeque<T> {
-    int size = 0;
+    int size;
     DequeList sentinel = new DequeList(null, null, null);
 
     public LinkedListDeque() {
+        size = 0;
         sentinel.next = sentinel;
         sentinel.prev = sentinel;
     }
@@ -34,7 +35,7 @@ public class LinkedListDeque<T> {
         }
         size -= 1;
         T firstItem = (T) sentinel.next.item;
-        DequeList secondL =  sentinel.next.next;
+        DequeList secondL = sentinel.next.next;
         sentinel.next = secondL;
         secondL.prev = sentinel;
 
@@ -83,7 +84,7 @@ public class LinkedListDeque<T> {
         return (T) front.item;
     }
 
-    public T getReHelper(DequeList front, int index) {
+    private T getReHelper(DequeList front, int index) {
         if (front == sentinel) {
             return null;
         }
