@@ -8,11 +8,11 @@ public class ArrayDeque<T> {
     private int maxSize;
 
     public ArrayDeque() {
-        items = (T[]) new Object[maxSize];
         size = 0;
         nextFirst = 4;
         nextLast = 5;
         maxSize = 8;
+        items = (T[]) new Object[maxSize];
     }
 
     private void resizeEnlarge() {
@@ -26,7 +26,7 @@ public class ArrayDeque<T> {
         System.arraycopy(items, 0, newArray, firstSize, lastSize);
         items = newArray;
         nextFirst = maxSize - 1;
-        nextLast = newArray.length;
+        nextLast = size;
     }
 
     private boolean beforeRatioCheck25() {
@@ -37,27 +37,25 @@ public class ArrayDeque<T> {
     private void resizeShrink() {
         int firstIndex = (nextFirst + 1) % maxSize;
         int lastIndex = (((nextLast - 1) % maxSize) + maxSize) % maxSize;
-        int firstSize;
+        int firstSize = maxSize - firstIndex;
         int lastSize = 0;
         maxSize /= 2;
         T[] newArray = (T[]) new Object[maxSize];
         if (lastIndex > firstIndex) {
             firstSize = (lastIndex - firstIndex + 1);
         } else {
-            firstSize = maxSize - firstIndex + 1;
+//            firstSize = maxSize - firstIndex + 1;
             lastSize = lastIndex + 1;
             System.arraycopy(items, 0, newArray, firstSize, lastSize);
         }
         System.arraycopy(items, firstIndex, newArray, 0, firstSize);
         items = newArray;
         nextFirst = maxSize - 1;
-        nextLast = newArray.length;
-
-
+        nextLast = size;
     }
 
     public void addFirst(T item) {
-        if (size == items.length){
+        if (maxSize == size){
             resizeEnlarge();
         }
         items[nextFirst] = item;
@@ -66,7 +64,7 @@ public class ArrayDeque<T> {
     }
 
     public void addLast(T item) {
-        if (size == items.length){
+        if (maxSize == size){
             resizeEnlarge();
         }
         items[nextLast] = item;
@@ -85,7 +83,7 @@ public class ArrayDeque<T> {
     public void printDeque() {
         int firstIndex = (nextFirst + 1) % maxSize;
         for (int i = 0; i < size; i++) {
-            System.out.print(items[(firstIndex + i) % maxSize]);
+            System.out.print(items[(firstIndex + i) % maxSize] + " ");
         }
         System.out.println();
     }
@@ -94,11 +92,11 @@ public class ArrayDeque<T> {
         if (size == 0) {
             return null;
         }
-        if (beforeRatioCheck25()) {
+        if (size >= 16 && beforeRatioCheck25()) {
             resizeShrink();
         }
-        T firstItem = items[nextFirst + 1];
-        nextFirst += 1;
+        T firstItem = items[(nextFirst + 1) % maxSize];
+        nextFirst = (nextFirst + 1) % maxSize;
         size -= 1;
 
         return firstItem;
@@ -108,11 +106,11 @@ public class ArrayDeque<T> {
         if (size == 0) {
             return null;
         }
-        if (beforeRatioCheck25()) {
+        if (size >= 16 && beforeRatioCheck25()) {
             resizeShrink();
         }
-        T lastItem = items[nextLast - 1];
-        nextFirst -= 1;
+        T lastItem = items[(((nextLast - 1) % maxSize) + maxSize) % maxSize];
+        nextLast = (((nextLast - 1) % maxSize) + maxSize) % maxSize;
         size -= 1;
 
         return lastItem;
