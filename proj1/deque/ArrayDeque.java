@@ -115,10 +115,10 @@ public class ArrayDeque<T> {
     }
 
     public T get(int index) {
-        if (size == 0) {
+        if (size == 0 || index > size - 1) {
             return null;
         }
 
-        return items[((nextFirst + 1) % maxSize) + index];
+        return items[(((nextFirst + 1) % maxSize) + index) % maxSize];
     }
 }
