@@ -1,6 +1,8 @@
 package deque;
 
-public class LinkedListDeque<T> {
+import java.util.Iterator;
+
+public class LinkedListDeque<T> implements Iterable {
     int size;
     DequeList sentinel = new DequeList(null, null, null);
 
@@ -74,7 +76,7 @@ public class LinkedListDeque<T> {
 
     public T get(int index) {
         DequeList front = sentinel.next;
-        for (int i = 0; i <= index; i++) {
+        for (int i = 0; i < index; i++) {
             if (front == sentinel) {
                 return null;
             }
@@ -91,11 +93,36 @@ public class LinkedListDeque<T> {
         if (index == 0) {
             return (T) front.item;
         }
-        getReHelper(front.next, index - 1);
-        return null; // ?
+        return getReHelper(front.next, index - 1);
     }
 
     public T getRecursive(int index) {
         return getReHelper(sentinel.next, index);
     }
+
+    private class LinkedListDequeIterator implements Iterator<T> {
+        private int wizPos;
+
+        public LinkedListDequeIterator() {
+            wizPos = 0;
+        }
+
+        public boolean hasNext(){
+            return wizPos < size;
+        }
+
+        public T next() {
+            T returnItem = get(wizPos);
+            wizPos += 1;
+            return returnItem;
+        }
+    }
+
+    public Iterator<T> iterator() {
+        return new LinkedListDequeIterator();
+    }
+
+//    public boolean equals(Object o) {
+//
+//    }
 }
