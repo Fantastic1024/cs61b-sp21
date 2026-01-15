@@ -122,7 +122,34 @@ public class LinkedListDeque<T> implements Iterable {
         return new LinkedListDequeIterator();
     }
 
-//    public boolean equals(Object o) {
-//
-//    }
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof LinkedListDeque<?>)) {
+            return false;
+        }
+        LinkedListDeque<T> other = (LinkedListDeque<T>) o;
+        if (other.size() != this.size()) {
+            return false;
+        }
+        for (Object item : this) {
+            if (!other.contains((T) item)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean contains(T item) {
+        for (int i = 0; i < size; i += 1) {
+            if (get(i).equals(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
