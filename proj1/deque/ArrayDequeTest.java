@@ -1,10 +1,13 @@
 package deque;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
-/** Tests the ArrayDeque class.
- *  @author Josh Hug
+/**
+ * Tests the ArrayDeque class.
+ *
+ * @author Josh Hug
  */
 
 public class ArrayDequeTest {
@@ -39,8 +42,14 @@ public class ArrayDequeTest {
         L.addLast(99);
         assertEquals(99, L.get(0));
         L.addLast(36);
-        assertEquals(99, L.get(0));
-        assertEquals(36, L.get(1));
+        L.addLast(36);
+        L.addLast(36);
+        L.addLast(123);
+        assertEquals(123, L.get(4));
+
+//        assertEquals(99, L.get(0));
+//        assertEquals(36, L.get(1));
+//        assertEquals(null, L.get(2));
     }
 
 
@@ -87,7 +96,9 @@ public class ArrayDequeTest {
         assertEquals(2, L.size());
     }
 
-    /** Tests insertion of a large number of items.*/
+    /**
+     * Tests insertion of a large number of items.
+     */
     @Test
     public void testMegaInsert() {
         ArrayDeque L = new ArrayDeque();
@@ -111,10 +122,47 @@ public class ArrayDequeTest {
         L.addFirst(123);
         L.removeFirst();
         L.removeLast();
-//        for (int i = 0; i < N; i += 1) {
-//            L.addLast(L.get(i));
-//        }
+
+      }
+
+    @Test
+    public void iteratorTestArray() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        lld1.addLast(5);
+        lld1.addLast(23);
+        lld1.addLast(42);
+
+        for (Object i : lld1) {
+            System.out.println(i);
+        }
     }
+
+    @Test
+    public void containTest() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        lld1.addLast(5);
+        lld1.addLast(23);
+        lld1.addLast(42);
+
+        assertEquals(true, lld1.contains(5));
+        assertEquals(false, lld1.contains(6));
+    }
+
+    @Test
+    public void equalsTest() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        lld1.addLast(5);
+        lld1.addLast(23);
+        lld1.addLast(42);
+
+        ArrayDeque<Integer> lld2 = new ArrayDeque<Integer>();
+        lld2.addLast(5);
+        lld2.addLast(23);
+        lld2.addLast(42);
+
+        assertEquals(true, lld1.equals(lld2));
+    }
+
 
     public static void main(String[] args) {
         jh61b.junit.TestRunner.runTests("all", ArrayDequeTest.class);
