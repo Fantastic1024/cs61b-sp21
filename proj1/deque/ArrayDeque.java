@@ -2,7 +2,7 @@ package deque;
 
 import java.util.Iterator;
 
-public class ArrayDeque<T> implements Iterable {
+public class ArrayDeque<T> implements Iterable, Deque<T> {
     private int size;
     private int nextFirst;
     private int nextLast;
@@ -70,10 +70,6 @@ public class ArrayDeque<T> implements Iterable {
         items[nextLast] = item;
         size += 1;
         nextLast = (nextLast + 1) % maxSize;
-    }
-
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     public int size() {
