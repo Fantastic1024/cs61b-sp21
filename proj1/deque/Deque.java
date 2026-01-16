@@ -8,6 +8,7 @@ public interface Deque<T> {
     public default boolean isEmpty() {
         return size() == 0;
     }
+
     public int size();
 
     public void printDeque();
