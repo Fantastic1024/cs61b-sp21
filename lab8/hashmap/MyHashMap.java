@@ -30,13 +30,16 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     /* Instance Variables */
     private Collection<Node>[] buckets;
-    private double maxLoad;
+    private double loadFactor;
+    private int itemSize;
+    private int collectionSize;
     // You should probably define some more!
 
     /** Constructors */
     public MyHashMap() {
-        maxLoad = 0.75;
-        buckets = createTable(16);
+        loadFactor = 0.75;
+        collectionSize = 16;
+        buckets = createTable(collectionSize);
     }
 
     public MyHashMap(int initialSize) {
@@ -52,7 +55,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     public MyHashMap(int initialSize, double maxLoad) {
         buckets = createTable(initialSize);
-        this.maxLoad = maxLoad;
+        this.loadFactor = maxLoad;
     }
 
     /**
@@ -100,29 +103,65 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     // TODO: Implement the methods of the Map61B Interface below
     // Your code won't compile until you do so!
 
+    private int getHashcodeIndex(K key) {
+        return Math.floorMod(key.hashCode(), collectionSize);
+    }
+
     @Override
     public void clear() {
-
+        buckets = createTable(collectionSize);
     }
 
     @Override
     public boolean containsKey(K key) {
-        return false;
+        int hashCodeIndex = getHashcodeIndex(key);
+        return buckets[hashCodeIndex] != null;
     }
 
     @Override
     public V get(K key) {
+        if (containsKey(key)) {
+            int hashCodeIndex = getHashcodeIndex(key);
+            for (Node i : buckets[hashCodeIndex]) {
+                if (i.key == key) {
+                    return (V) i;
+                }
+            }
+        }
+
         return null;
     }
 
     @Override
     public int size() {
-        return 0;
+        return itemSize;
     }
 
     @Override
     public void put(K key, V value) {
+        int hashCodeIndex = getHashcodeIndex(key);
+        if (containsKey(key)) {
+            Node currentNode = (Node) get(key);
+            currentNode.value = value;
+            return;
+        }
 
+        if (loadCheck()) {
+            resizeCol();
+        }
+
+        itemSize += 1;
+        buckets[hashCodeIndex] = createBucket();
+        buckets[hashCodeIndex].add(createNode(key, value));
+    }
+
+    private void resizeCol() {
+        collectionSize *= 2;
+    }
+
+    private boolean loadCheck() {
+        double nextLoadFactor = (double) (itemSize + 1) / collectionSize;
+        return nextLoadFactor > 1.5;
     }
 
     @Override
@@ -142,7 +181,26 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     @Override
     public Iterator<K> iterator() {
-        return null;
+        return new MyHashMapIterator();
     }
 
+    private class MyHashMapIterator implements Iterator<K> {
+        private int wizPosBucket;
+        private Collection<Node> wizPosNode;
+
+        private MyHashMapIterator() {
+            wizPosBucket = 0;
+            wizPosNode = buckets[0];
+        }
+
+        @Override
+        public boolean hasNext() {
+            return wizPosBucket < collectionSize && wizPosNode == null;
+        }
+
+        @Override
+        public K next() {
+            return null;
+        }
+    }
 }
