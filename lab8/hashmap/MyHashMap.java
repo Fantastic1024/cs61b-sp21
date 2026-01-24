@@ -185,22 +185,31 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     }
 
     private class MyHashMapIterator implements Iterator<K> {
-        private int wizPosBucket;
-        private Collection<Node> wizPosNode;
+        private int wizPosTable;
+        private int wizPosNode;
+        private int wizPosCount;
+        private Collection<Node> wizPosBucketArray;
 
         private MyHashMapIterator() {
-            wizPosBucket = 0;
-            wizPosNode = buckets[0];
+            wizPosTable = 0;
+            wizPosNode = 0;
+            Node[] wizPosBucketArray = (Node[]) buckets[wizPosTable].toArray();
         }
 
         @Override
         public boolean hasNext() {
-            return wizPosBucket < collectionSize && wizPosNode == null;
+            return wizPosCount < itemSize;
         }
 
         @Override
         public K next() {
-            return null;
+            if (wizPosBucketArray.isEmpty()) {
+                wizPosTable += 1;
+            }
+            K returnItem = (K) wizPosBucketArray[wizPosNode];
+            wizPosNode += 1;
+            wizPosCount += 1;
+            return returnItem;
         }
     }
 }
