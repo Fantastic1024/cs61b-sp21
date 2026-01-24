@@ -108,9 +108,14 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         return Math.floorMod(key.hashCode(), collectionSize);
     }
 
+    private int getHashcodeIndex(K key, int cSize) {
+        return Math.floorMod(key.hashCode(), cSize);
+    }
+
     @Override
     public void clear() {
         buckets = createTable(collectionSize);
+        itemSize = 0;
     }
 
     @Override
@@ -123,9 +128,10 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     public V get(K key) {
         if (containsKey(key)) {
             int hashCodeIndex = getHashcodeIndex(key);
-            for (Node i : buckets[hashCodeIndex]) {
-                if (i.key == key) {
-                    return (V) i;
+            Collection<Node> bucket = buckets[hashCodeIndex];
+            for (Node i : bucket) {
+                if (key.equals(i.key)) {
+                    return i.value;
                 }
             }
         }
@@ -141,87 +147,69 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     @Override
     public void put(K key, V value) {
         int hashCodeIndex = getHashcodeIndex(key);
+        Collection<Node> bucket = buckets[hashCodeIndex];
         if (containsKey(key)) {
-            Node currentNode = (Node) get(key);
-            currentNode.value = value;
-            return;
+            for (Node i : bucket) {
+                if (key.equals(i.key)) {
+                    i.value = value;
+                    return;
+                }
+            }
         }
 
         if (loadCheck()) {
             resizeCol();
         }
 
-        itemSize += 1;
-        buckets[hashCodeIndex] = createBucket();
-        buckets[hashCodeIndex].add(createNode(key, value));
+        if (bucket == null) {
+            bucket = createBucket();
+        }
+
+        bucket.add(createNode(key, value));
+        buckets[hashCodeIndex] = bucket;
         hashSet.add(key);
+        itemSize += 1;
+        loadFactor = (double) itemSize / collectionSize;
     }
 
     private void resizeCol() {
         int enlargedSize = 2 * collectionSize;
-        for (int i = 0; i < collectionSize; i++) {
-            Collection<Node> bucketIterator = buckets[i];
-            for (Node n : bucketIterator) {
-
+        Collection<Node>[] newBuckets = createTable(enlargedSize);
+        for (K key : hashSet) {
+            int hashCodeIndex = getHashcodeIndex(key, enlargedSize);
+            Collection<Node> newBucket = newBuckets[hashCodeIndex];
+            if (newBucket == null) {
+                newBucket = createBucket();
             }
+            newBucket.add(createNode(key, get(key)));
+            newBuckets[hashCodeIndex] = newBucket;
         }
+        collectionSize = enlargedSize;
+        buckets = newBuckets;
     }
 
     private boolean loadCheck() {
         double nextLoadFactor = (double) (itemSize + 1) / collectionSize;
-        return nextLoadFactor > 1.5;
+        return nextLoadFactor > 0.75;
     }
 
     @Override
     public Set<K> keySet() {
-        return Set.of();
+        return hashSet;
     }
 
     @Override
     public V remove(K key) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public V remove(K key, V value) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Iterator<K> iterator() {
-        return new MyHashMapIterator();
-    }
-
-    private class MyHashMapIterator implements Iterator<K> {
-        private int wizPosTable;
-        private int wizPosCount;
-        Collection<Node> bucket;
-
-        private MyHashMapIterator() {
-            wizPosTable = 0;
-            bucket = buckets[wizPosTable];
-        }
-
-        @Override
-        public boolean hasNext() {
-            return wizPosCount < itemSize;
-        }
-
-        @Override
-        public K next() {
-            while (bucket.isEmpty()) {
-                wizPosTable += 1;
-                bucket = buckets[wizPosTable];
-            }
-            Iterator<Node> bucketIterator = bucket.iterator();
-            if (bucketIterator.hasNext()) {
-                wizPosCount += 1;
-            } else {
-                wizPosTable += 1;
-                bucket = buckets[wizPosTable];
-            }
-
-            return bucketIterator.next().key;
-        }
+        return hashSet.iterator();
     }
 }
