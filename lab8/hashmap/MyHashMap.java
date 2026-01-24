@@ -1,9 +1,6 @@
 package hashmap;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 /**
  *  A hash table-backed Map implementation. Provides amortized constant time
@@ -33,6 +30,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     private double loadFactor;
     private int itemSize;
     private int collectionSize;
+    private HashSet<K> hashSet;
     // You should probably define some more!
 
     /** Constructors */
@@ -40,10 +38,12 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         loadFactor = 0.75;
         collectionSize = 16;
         buckets = createTable(collectionSize);
+        hashSet = new HashSet<>();
     }
 
     public MyHashMap(int initialSize) {
         buckets = createTable(initialSize);
+        hashSet = new HashSet<>();
     }
 
     /**
@@ -55,7 +55,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     public MyHashMap(int initialSize, double maxLoad) {
         buckets = createTable(initialSize);
-        this.loadFactor = maxLoad;
+        loadFactor = maxLoad;
+        hashSet = new HashSet<>();
     }
 
     /**
@@ -153,10 +154,17 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         itemSize += 1;
         buckets[hashCodeIndex] = createBucket();
         buckets[hashCodeIndex].add(createNode(key, value));
+        hashSet.add(key);
     }
 
     private void resizeCol() {
-        collectionSize *= 2;
+        int enlargedSize = 2 * collectionSize;
+        for (int i = 0; i < collectionSize; i++) {
+            Collection<Node> bucketIterator = buckets[i];
+            for (Node n : bucketIterator) {
+
+            }
+        }
     }
 
     private boolean loadCheck() {
@@ -213,7 +221,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
                 bucket = buckets[wizPosTable];
             }
 
-            return (K) bucketIterator.next();
+            return bucketIterator.next().key;
         }
     }
 }
