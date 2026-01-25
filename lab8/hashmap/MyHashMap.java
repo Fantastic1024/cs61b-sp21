@@ -43,6 +43,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     public MyHashMap(int initialSize) {
         buckets = createTable(initialSize);
+        collectionSize = initialSize;
         hashSet = new HashSet<>();
     }
 
@@ -55,6 +56,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     public MyHashMap(int initialSize, double maxLoad) {
         buckets = createTable(initialSize);
+        collectionSize = initialSize;
         loadFactor = maxLoad;
         hashSet = new HashSet<>();
     }
