@@ -159,6 +159,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
         if (loadCheck()) {
             resizeCol();
+            hashCodeIndex = getHashcodeIndex(key);
+            bucket = buckets[hashCodeIndex];
         }
 
         if (bucket == null) {
@@ -186,6 +188,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         }
         collectionSize = enlargedSize;
         buckets = newBuckets;
+        loadFactor = (double) itemSize / collectionSize;
     }
 
     private boolean loadCheck() {
