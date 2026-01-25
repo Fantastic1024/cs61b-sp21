@@ -1,0 +1,29 @@
+Random Test:
+    Enter # strings to insert into hashmap.ULLMap: 10000000
+    --Stack Overflow -- couldn't add 10000000 strings of length 10.
+
+    Enter # strings to insert into your hashmap.MyHashMap: 10000000
+    class hashmap.MyHashMap: 5.17 sec
+
+    Enter # strings to insert into Java's HashMap: 10000000
+    Java's Built-in HashMap: 2.07 sec
+
+Order Test:
+    Enter # strings to insert into hashmap.ULLMap: 10
+    class hashmap.ULLMap: 0.00 sec
+
+    Enter # strings to insert into hashmap.MyHashMap: 10000000
+    class hashmap.MyHashMap: 2.17 sec
+
+    Enter # strings to insert into Java's HashMap: 10000000
+    Java's Built-in HashMap: 1.13 sec
+
+Different bucket type Test:
+    What would you like L to be?: 10
+
+    Enter # strings to insert into each map: 10000000
+    class hashmap.MyHashMapALBuckets: 5.00 sec
+    class hashmap.MyHashMapLLBuckets: 5.37 sec
+    class hashmap.MyHashMapTSBuckets: 6.61 sec
+    class hashmap.MyHashMapHSBuckets: 7.99 sec
+    class hashmap.MyHashMapPQBuckets: 5.82 sec
